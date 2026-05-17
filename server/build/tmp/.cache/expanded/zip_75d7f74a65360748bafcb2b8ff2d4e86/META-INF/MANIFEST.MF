@@ -1,0 +1,64 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 5.1.8
+Built-By: root
+Build-Jdk: 11.0.30
+Specification-Title: Netty/Handler
+Specification-Version: 4.2
+Specification-Vendor: The Netty Project
+Implementation-Title: Netty/Handler
+Implementation-Version: 4.2.10.Final
+Implementation-Vendor-Id: io.netty
+Implementation-Vendor: The Netty Project
+Implementation-URL: https://netty.io/netty-handler/
+Multi-Release: true
+Bnd-LastModified: 1770287152227
+Build-Jdk-Spec: 11
+Bundle-Description: Netty is an asynchronous event-driven network applic
+ ation framework for    rapid development of maintainable high performan
+ ce protocol servers and    clients.
+Bundle-DocURL: https://netty.io/
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Netty/Handler
+Bundle-SymbolicName: io.netty.handler
+Bundle-Vendor: The Netty Project
+Bundle-Version: 4.2.10.Final
+Export-Package: io.netty.handler.address;uses:="io.netty.channel,io.nett
+ y.resolver";version="4.2.10",io.netty.handler.flow;uses:="io.netty.chan
+ nel";version="4.2.10",io.netty.handler.flush;uses:="io.netty.channel";v
+ ersion="4.2.10",io.netty.handler.ipfilter;uses:="io.netty.channel";vers
+ ion="4.2.10",io.netty.handler.logging;uses:="io.netty.channel,io.netty.
+ util.internal.logging";version="4.2.10",io.netty.handler.pcap;uses:="io
+ .netty.channel";version="4.2.10",io.netty.handler.ssl;uses:="io.netty.b
+ uffer,io.netty.channel,io.netty.handler.codec,io.netty.util,io.netty.ut
+ il.concurrent,javax.crypto,javax.net.ssl";version="4.2.10",io.netty.han
+ dler.ssl.util;uses:="javax.net.ssl,javax.security.auth.x500,javax.secur
+ ity.cert";version="4.2.10",io.netty.handler.stream;uses:="io.netty.buff
+ er,io.netty.channel";version="4.2.10",io.netty.handler.timeout;uses:="i
+ o.netty.channel";version="4.2.10",io.netty.handler.traffic;uses:="io.ne
+ tty.channel,io.netty.util.concurrent";version="4.2.10"
+Import-Package: sun.security.ssl;resolution:=optional,io.netty.buffer;ve
+ rsion="[4.2,5)",io.netty.channel;version="[4.2,5)",io.netty.channel.soc
+ ket;version="[4.2,5)",io.netty.channel.unix;version="[4.2,5)",io.netty.
+ handler.codec;version="[4.2,5)",io.netty.handler.codec.base64;version="
+ [4.2,5)",io.netty.handler.ssl.util,io.netty.internal.tcnative;version="
+ [2.0,3)";resolution:=optional,io.netty.pkitesting;version="[4.2,5)";res
+ olution:=optional,io.netty.resolver;version="[4.2,5)",io.netty.util;ver
+ sion="[4.2,5)",io.netty.util.collection;version="[4.2,5)",io.netty.util
+ .concurrent;version="[4.2,5)",io.netty.util.internal;version="[4.2,5)",
+ io.netty.util.internal.logging;version="[4.2,5)",javax.crypto,javax.cry
+ pto.spec,javax.naming.ldap,javax.net.ssl,javax.security.auth.x500,javax
+ .security.cert,org.bouncycastle.asn1.pkcs;version="[1.83,2)";resolution
+ :=optional,org.bouncycastle.asn1.x500;version="[1.83,2)";resolution:=op
+ tional,org.bouncycastle.cert;version="[1.83,2)";resolution:=optional,or
+ g.bouncycastle.cert.jcajce;version="[1.83,2)";resolution:=optional,org.
+ bouncycastle.openssl;version="[1.83,2)";resolution:=optional,org.bouncy
+ castle.openssl.jcajce;version="[1.83,2)";resolution:=optional,org.bounc
+ ycastle.operator;version="[1.83,2)";resolution:=optional,org.bouncycast
+ le.operator.jcajce;version="[1.83,2)";resolution:=optional,org.bouncyca
+ stle.pkcs;version="[1.83,2)";resolution:=optional,org.conscrypt;version
+ ="[2.5,3)";resolution:=optional,sun.nio.ch;resolution:=optional,org.bou
+ ncycastle.jcajce.provider;version="[1.0,2)";resolution:=optional
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-6.3.1.202206071316
+

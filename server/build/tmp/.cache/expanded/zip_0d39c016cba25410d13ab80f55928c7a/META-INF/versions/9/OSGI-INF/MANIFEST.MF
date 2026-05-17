@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Import-Package: java.io;resolution:=optional,java.lang;resolution:=opt
+ ional,java.lang.reflect;resolution:=optional,java.math;resolution:=op
+ tional,java.security;resolution:=optional,java.text;resolution:=optio
+ nal,java.util;resolution:=optional,org.bouncycastle.asn1;version="[1.
+ 82,1.83)",org.bouncycastle.asn1.nist;version="[1.82,1.83)",org.bouncy
+ castle.asn1.ocsp;version="[1.82,1.83)",org.bouncycastle.asn1.pkcs;ver
+ sion="[1.82,1.83)",org.bouncycastle.asn1.x500;version="[1.82,1.83)",o
+ rg.bouncycastle.asn1.x509;version="[1.82,1.83)",org.bouncycastle.math
+ .ec;version="[1.82,1.83)",org.bouncycastle.util;version="[1.82,1.83)"
+ ,org.bouncycastle.util.encoders;version="[1.82,1.83)",org.bouncycastl
+ e.util.io;version="[1.82,1.83)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+

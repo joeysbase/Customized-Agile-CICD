@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor User
+    participant CLI as ReportSubcommand
+    participant RA as RequestAgent
+    participant Router as PipelineRouter
+    participant DB as DataStoreAgent / MongoDB
+
+    User->>CLI: cicd report --pipeline demo --run 1 --stage build
+    CLI->>RA: getReportByPath("demo", "1", "build", null)
+    RA->>Router: GET /api/pipelines/demo/runs/1/build
+    Router->>Router: Parse path segments:<br/>name=demo, runNo=1, stage=build
+    Router->>DB: findStage("demo", 1, "build")
+    DB-->>Router: stage document + jobs
+    Router-->>RA: 200 {pipeline, runNo, stage{name, status, jobs[...]}}
+    RA-->>CLI: response stored in MESSAGES
+    CLI-->>User: Report output

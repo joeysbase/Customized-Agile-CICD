@@ -1,0 +1,36 @@
+graph TB
+    subgraph Host["Host Machine"]
+        CLI["CLI Client<br/>(cicd)"]
+    end
+
+    subgraph Minikube["Minikube Cluster"]
+        subgraph ServerPod["cicd-server Pod"]
+            Server["Java Server<br/>:8080"]
+        end
+        subgraph MongoPod["mongo Pod"]
+            Mongo["MongoDB<br/>:27017"]
+        end
+        subgraph JobPods["Pipeline Job Pods"]
+            Job1["compile<br/>(alpine:3.21)"]
+            Job2["unit-test<br/>(alpine:3.21)"]
+            Job3["..."]
+        end
+
+        ServerSvc["cicd-server-service<br/>(NodePort :30080→:8080)"]
+        MongoSvc["mongo-service<br/>(ClusterIP :27017)"]
+        PVC["workspace PVC<br/>/workspace"]
+
+        ConfigMap["server-configmap<br/>MONGO_URI<br/>MONGO_DB"]
+        Secret["mongo-secret<br/>username / password"]
+        RBAC["ServiceAccount<br/>+ Role + RoleBinding"]
+    end
+
+    CLI -->|"CICD_SERVER_URL<br/>HTTP POST/GET"| ServerSvc
+    ServerSvc --> Server
+    Server -->|"MONGO_URI"| MongoSvc
+    Server -->|"k8s API<br/>create Job"| JobPods
+    MongoSvc --> Mongo
+    ConfigMap -.->|env| Server
+    Secret -.->|env| Mongo
+    RBAC -.->|permissions| Server
+    PVC -.->|mount /workspace| JobPods

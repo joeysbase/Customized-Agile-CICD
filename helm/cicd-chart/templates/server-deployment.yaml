@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-cicd-server
+  labels:
+    app: {{ .Release.Name }}-cicd-server
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-cicd-server
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-cicd-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: {{ .Release.Name }}-cicd-server
+      containers:
+        - name: cicd-server
+          image: {{ .Values.server.image }}
+          imagePullPolicy: {{ .Values.server.imagePullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-server-configmap
+                  key: mongo-uri
+            - name: MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-server-configmap
+                  key: mongo-db
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://{{ .Release.Name }}-otel-collector-service:{{ .Values.otelCollector.service.grpcPort }}"
+            - name: OTEL_SERVICE_NAME
+              value: "cicd-server"

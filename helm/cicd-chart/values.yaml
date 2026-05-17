@@ -1,0 +1,57 @@
+mongo:
+  image: mongo:7
+  rootUsername: admin
+  rootPassword: password
+  service:
+    port: 27017
+
+server:
+  image: jasonte/cs7580fteam
+  imagePullPolicy: IfNotPresent
+  replicas: 1
+  service:
+    type: NodePort
+    port: 8080
+    nodePort: 30080
+  mongo:
+    db: cicd
+
+prometheus:
+  image: prom/prometheus
+  service:
+    port: 9090
+  pvc:
+    size: 2Gi
+  retention: 7d
+
+loki:
+  image: grafana/loki
+  service:
+    port: 3100
+  pvc:
+    size: 2Gi
+
+tempo:
+  image: grafana/tempo:2.6.1
+  service:
+    httpPort: 3200
+    grpcPort: 4317
+  pvc:
+    size: 2Gi
+
+otelCollector:
+  image: otel/opentelemetry-collector-contrib
+  service:
+    grpcPort: 4317
+    httpPort: 4318
+
+grafana:
+  image: grafana/grafana
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30300
+  pvc:
+    size: 1Gi
+  adminUser: admin
+  adminPassword: admin

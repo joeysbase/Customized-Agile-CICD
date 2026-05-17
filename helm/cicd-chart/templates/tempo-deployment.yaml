@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-tempo
+  labels:
+    app: {{ .Release.Name }}-tempo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-tempo
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-tempo
+    spec:
+      containers:
+        - name: tempo
+          image: {{ .Values.tempo.image }}
+          args:
+            - "-config.file=/etc/tempo/tempo.yaml"
+          ports:
+            - containerPort: 3200
+            - containerPort: 4317
+          volumeMounts:
+            - name: config
+              mountPath: /etc/tempo
+            - name: data
+              mountPath: /var/tempo
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-tempo-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-tempo-pvc

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: io.opentelemetry.context
+Built-By: runner
+Built-JDK: 17.0.12
+Implementation-Title: context
+Implementation-Version: 1.43.0
+

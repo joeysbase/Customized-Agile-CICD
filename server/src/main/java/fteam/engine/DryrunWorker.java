@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Worker that validates a pipeline configuration and emits its planned execution order.
+ */
 public class DryrunWorker extends Worker {
 
   private final String configurationString;
@@ -13,10 +16,19 @@ public class DryrunWorker extends Worker {
     this.configurationString = configStr;
   }
 
+  /**
+   * Creates a dry-run worker from raw file content.
+   *
+   * @param fileString pipeline configuration content
+   * @return configured worker instance
+   */
   public static DryrunWorker fromFileString(String fileString) {
     return new DryrunWorker(fileString);
   }
 
+  /**
+   * Validates the configuration and writes the execution plan to the worker messages.
+   */
   @Override
   public void run() {
     PipelineConfig cfg = PipelineConfig.fromFile(configurationString);
@@ -44,7 +56,9 @@ public class DryrunWorker extends Worker {
     for (Map.Entry<String, List<Job>> e : byStage.entrySet()) {
       String stage = e.getKey();
       List<Job> jobs = e.getValue();
-      if (jobs.isEmpty()) continue;
+      if (jobs.isEmpty()) {
+        continue;
+      }
 
       addMessage("");
       addMessage("Stage: " + stage);

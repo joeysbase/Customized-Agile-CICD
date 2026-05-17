@@ -1,0 +1,9 @@
+{
+"resources":{
+"includes":[
+{
+"pattern":"^lib/loongarch64-Linux-clang/jni/.*"
+}
+]},
+"bundles":[]
+}

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1655327895284
+Build-Jdk: 11.0.15
+Built-By: fabian
+Bundle-Description: Core instrumentation library for the simpleclient.
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Prometheus Java Simpleclient
+Bundle-SymbolicName: io.prometheus.simpleclient
+Bundle-Version: 0.16.0
+Created-By: Apache Maven Bundle Plugin
+Export-Package: io.prometheus.client;uses:="io.prometheus.client.exempla
+ rs";version="0.16.0",io.prometheus.client.exemplars;uses:="io.prometheu
+ s.client.exemplars.tracer.common";version="0.16.0"
+Import-Package: io.prometheus.client.exemplars.tracer.common;version="[0
+ .16,1)",io.prometheus.client.exemplars.tracer.otel;version="[0.16,1)",i
+ o.prometheus.client.exemplars.tracer.otel_agent;version="[0.16,1)"
+Tool: Bnd-2.1.0.20130426-122213

@@ -1,0 +1,70 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.15
+Created-By: 21.0.8+9-Ubuntu-0ubuntu125.04.1 (Ubuntu)
+Main-Class: com.sun.jna.Native
+Implementation-Title: com.sun.jna
+Implementation-Vendor: JNA Development Team
+Implementation-Version: 5.18.1 (b0)
+Specification-Title: Java Native Access (JNA)
+Specification-Vendor: JNA Development Team
+Specification-Version: 5
+Bundle-Category: jni
+Bundle-ManifestVersion: 2
+Bundle-Name: jna
+Bundle-Description: JNA Library
+Bundle-SymbolicName: com.sun.jna
+Bundle-Version: 5.18.1
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: JNA Development Team
+Bundle-ActivationPolicy: lazy
+Export-Package:  com.sun.jna;version="5.18.1", com.sun.jna.ptr;version
+ ="5.18.1";uses:="com.sun.jna", com.sun.jna.win32;version="5.18.1";use
+ s:="com.sun.jna" 
+Bundle-NativeCode:  com/sun/jna/win32-x86/jnidispatch.dll; processor=x
+ 86;osname=win32, com/sun/jna/win32-x86-64/jnidispatch.dll; processor=
+ x86-64;osname=win32, com/sun/jna/win32-aarch64/jnidispatch.dll; proce
+ ssor=aarch64;osname=win32, com/sun/jna/win32-x86/jnidispatch.dll; pro
+ cessor=x86;osname=win, com/sun/jna/win32-x86-64/jnidispatch.dll; proc
+ essor=x86-64;osname=win, com/sun/jna/win32-aarch64/jnidispatch.dll; p
+ rocessor=aarch64;osname=win, com/sun/jna/w32ce-arm/jnidispatch.dll; p
+ rocessor=arm;osname=wince,  com/sun/jna/sunos-x86/libjnidispatch.so; 
+ processor=x86;osname=sunos, com/sun/jna/sunos-x86-64/libjnidispatch.s
+ o; processor=x86-64;osname=sunos, com/sun/jna/sunos-sparc/libjnidispa
+ tch.so; processor=sparc;osname=sunos, com/sun/jna/sunos-sparcv9/libjn
+ idispatch.so; processor=sparcv9;osname=sunos,  com/sun/jna/aix-ppc/li
+ bjnidispatch.a; processor=ppc;osname=aix, com/sun/jna/aix-ppc64/libjn
+ idispatch.a; processor=ppc64;osname=aix,  com/sun/jna/linux-ppc/libjn
+ idispatch.so; processor=ppc;osname=linux, com/sun/jna/linux-ppc64/lib
+ jnidispatch.so; processor=ppc64;osname=linux, com/sun/jna/linux-ppc64
+ le/libjnidispatch.so; processor=ppc64le;osname=linux, com/sun/jna/lin
+ ux-x86/libjnidispatch.so; processor=x86;osname=linux, com/sun/jna/lin
+ ux-x86-64/libjnidispatch.so; processor=x86-64;osname=linux, com/sun/j
+ na/linux-arm/libjnidispatch.so; processor=arm;osname=linux, com/sun/j
+ na/linux-arm/libjnidispatch.so; processor=arm_le;osname=linux, com/su
+ n/jna/linux-armel/libjnidispatch.so; processor=armel;osname=linux, co
+ m/sun/jna/linux-aarch64/libjnidispatch.so; processor=aarch64;osname=l
+ inux, com/sun/jna/linux-ia64/libjnidispatch.so; processor=ia64;osname
+ =linux, com/sun/jna/linux-sparcv9/libjnidispatch.so; processor=sparcv
+ 9;osname=linux, com/sun/jna/linux-mips64el/libjnidispatch.so; process
+ or=mips64el;osname=linux, com/sun/jna/linux-s390x/libjnidispatch.so; 
+ processor=S390x;osname=linux, com/sun/jna/linux-loongarch64/libjnidis
+ patch.so; processor=loongarch64;osname=linux, com/sun/jna/linux-riscv
+ 64/libjnidispatch.so; processor=riscv64;osname=linux,  com/sun/jna/dr
+ agonflybsd-x86-64/libjnidispatch.so; processor=x86-64;osname=dragonfl
+ ybsd,  com/sun/jna/freebsd-x86/libjnidispatch.so; processor=x86;osnam
+ e=freebsd, com/sun/jna/freebsd-x86-64/libjnidispatch.so; processor=x8
+ 6-64;osname=freebsd, com/sun/jna/freebsd-aarch64/libjnidispatch.so; p
+ rocessor=aarch64;osname=freebsd, com/sun/jna/freebsd-ppc64le/libjnidi
+ spatch.so; processor=ppc64le;osname=freebsd, com/sun/jna/freebsd-ppc6
+ 4/libjnidispatch.so; processor=ppc64;osname=freebsd,  com/sun/jna/ope
+ nbsd-x86/libjnidispatch.so; processor=x86;osname=openbsd, com/sun/jna
+ /openbsd-x86-64/libjnidispatch.so; processor=x86-64;osname=openbsd,  
+ com/sun/jna/darwin-ppc/libjnidispatch.jnilib; osname=macosx;processor
+ =ppc, com/sun/jna/darwin-ppc64/libjnidispatch.jnilib; osname=macosx;p
+ rocessor=ppc64, com/sun/jna/darwin-x86/libjnidispatch.jnilib; osname=
+ macosx;processor=x86, com/sun/jna/darwin-x86-64/libjnidispatch.jnilib
+ ; osname=macosx;processor=x86-64, com/sun/jna/darwin-aarch64/libjnidi
+ spatch.jnilib; osname=macosx;processor=aarch64 
+ModuleMainClass: com.sun.jna.Native
+Automatic-Module-Name: com.sun.jna
+

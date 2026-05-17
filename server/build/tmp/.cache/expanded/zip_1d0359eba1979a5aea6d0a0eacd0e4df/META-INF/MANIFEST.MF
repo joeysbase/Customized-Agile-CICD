@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: 1.8.0_232 (Amazon.com Inc.)
+Built-By: julio
+Build-Jdk: 1.8.0_232
+Bnd-LastModified: 1699219757965
+Bundle-ContactAddress: ${project.parent.url}
+Bundle-Description: A java library that adds some very useful features
+  to Gson, like Date serializing to unix timestamp or RFC3339, method 
+ (getter) serialization, pre and post processors and many more. Check 
+ out the documentation to learn how to use it!
+Bundle-DocURL: http://gsonfire.io
+Bundle-License: "Apache-2.0";link="https://www.apache.org/licenses/LIC
+ ENSE-2.0.txt"
+Bundle-ManifestVersion: 2
+Bundle-Name: Gson on Fire!
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6, JavaSE-1.7, JavaSE-1.8
+Bundle-SCM: url="git@github.com:julman99/gson-fire.git",connection="sc
+ m:git:git@github.com:julman99/gson-fire.git",developer-connection="sc
+ m:git:git@github.com:julman99/gson-fire.git",tag=HEAD
+Bundle-SymbolicName: io.gsonfire
+Bundle-Vendor: julman99
+Bundle-Version: 1.9.0
+Export-Package: io.gsonfire;uses:="com.google.gson";version="1.9.0"
+Import-Package: com.google.gson;version="[2.10,3)",com.google.gson.ann
+ otations;version="[2.10,3)",com.google.gson.reflect;version="[2.10,3)
+ ",com.google.gson.stream;version="[2.10,3)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.6))"
+Tool: Bnd-5.0.0.202001221519
+

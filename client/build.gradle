@@ -39,8 +39,6 @@ dependencies {
 
     implementation 'org.yaml:snakeyaml:2.2'
 
-    
-
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstyle.toolVersion}"
 }
 
@@ -49,11 +47,18 @@ jar {
 
     manifest {
         attributes(
-            "Main-Class": application.mainClass
+                "Main-Class": application.mainClass
         )
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    exclude(
+            "META-INF/*.SF",
+            "META-INF/*.DSA",
+            "META-INF/*.RSA",
+            "META-INF/INDEX.LIST"
+    )
 
     from {
         configurations.runtimeClasspath.collect {
@@ -72,7 +77,6 @@ pmd {
     consoleOutput = true
     toolVersion = "7.16.0"
     rulesMinimumPriority = 5
-    ignoreFailures = true
     // ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
 }
 
@@ -85,6 +89,8 @@ test {
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
+jacocoTestReport.outputs.upToDateWhen { false }
+
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
 
@@ -95,6 +101,18 @@ jacocoTestReport {
     }
 } 
 
+jacocoTestCoverageVerification {
+    dependsOn test
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+        }
+    }
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -104,7 +122,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'fteam.cli_client.CICDCommand'
+    mainClass = 'fteam.cliclient.CicdCommand'
 }
 
 tasks.named('test') {

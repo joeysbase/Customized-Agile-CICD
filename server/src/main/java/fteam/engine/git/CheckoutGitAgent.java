@@ -2,10 +2,30 @@ package fteam.engine.git;
 
 import java.io.File;
 
+/**
+ * Git agent that clones a repository into a temporary workspace and optionally checks out a
+ * branch or commit.
+ */
 public class CheckoutGitAgent implements GitAgent {
 
   private final WorkspaceManager wm = new WorkspaceManager();
 
+  /**
+   * Creates a checkout-based Git agent.
+   */
+  public CheckoutGitAgent() {
+  }
+
+  /**
+   * Prepares a fresh workspace by cloning the repository and applying the requested branch or
+   * commit selection.
+   *
+   * @param repoPath repository path or clone source
+   * @param branch optional branch to check out
+   * @param commit optional commit to check out
+   * @return prepared workspace directory
+   * @throws Exception when cloning or checkout fails
+   */
   @Override
   public File prepareWorkspace(String repoPath, String branch, String commit) throws Exception {
     File workspace = wm.createWorkspace();
@@ -28,7 +48,9 @@ public class CheckoutGitAgent implements GitAgent {
 
   private void run(File dir, String... cmd) throws Exception {
     ProcessBuilder pb = new ProcessBuilder(cmd);
-    if (dir != null) pb.directory(dir);
+    if (dir != null) {
+      pb.directory(dir);
+    }
     pb.redirectErrorStream(true);
     Process p = pb.start();
     int code = p.waitFor();

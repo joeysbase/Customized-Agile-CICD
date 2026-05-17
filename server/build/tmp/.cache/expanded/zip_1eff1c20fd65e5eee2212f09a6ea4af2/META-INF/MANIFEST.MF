@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: io.opentelemetry.sdk.autoconfigure.spi
+Built-By: runner
+Built-JDK: 17.0.12
+Implementation-Title: autoconfigure-spi
+Implementation-Version: 1.43.0
+

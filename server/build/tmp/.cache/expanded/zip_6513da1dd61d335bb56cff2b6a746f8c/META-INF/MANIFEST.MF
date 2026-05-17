@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: io.kubernetes.client.java.proto
+Bnd-LastModified: 1718991683155
+Build-Jdk-Spec: 17
+Bundle-Description: Kubernetes Client Library
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: client-java-proto
+Bundle-SymbolicName: io.kubernetes.client-java-proto
+Bundle-Version: 21.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: io.kubernetes.client.proto;uses:="com.google.protobuf"
+ ;version="21.0.0"
+Import-Package: com.google.protobuf;version="[4.27,5)",java.io,java.la
+ ng,java.lang.invoke,java.nio,java.util
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316
+

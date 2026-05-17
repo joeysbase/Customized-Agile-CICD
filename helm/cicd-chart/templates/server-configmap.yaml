@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-server-configmap
+data:
+  mongo-uri: "mongodb://{{ .Values.mongo.rootUsername }}:{{ .Values.mongo.rootPassword }}@{{ .Release.Name }}-mongo-service:{{ .Values.mongo.service.port }}"
+  mongo-db: {{ .Values.server.mongo.db | quote }}

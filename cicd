@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+JAR_PATH="$ROOT_DIR/client/build/libs/client-all.jar"
+
+if [[ ! -d "$ROOT_DIR/.git" ]]; then
+  echo "cicd must be run from the root of the repository (missing .git/)." >&2
+  exit 2
+fi
+
+if [[ ! -f "$JAR_PATH" ]]; then
+  echo "Missing CLI jar: $JAR_PATH" >&2
+  echo "Build it first with: ./gradlew :client:shadowJar" >&2
+  exit 3
+fi
+
+java -jar "$JAR_PATH" "$@"

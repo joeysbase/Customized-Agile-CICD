@@ -1,0 +1,52 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven Bundle Plugin
+Built-By: briancampbell
+Build-Jdk: 17.0.3
+Automatic-Module-Name: org.jose4j
+Bundle-ManifestVersion: 2
+Tool: Bnd-1.43.0
+Bnd-LastModified: 1709750890420
+Export-Package: org.jose4j.jws;uses:="org.jose4j.jwa,org.slf4j,org.jose4
+ j.keys,org.jose4j.lang,org.jose4j.jca,org.jose4j.jwk,org.jose4j.jwx,org
+ .jose4j.mac,javax.crypto,org.jose4j.base64url";version="0.9.6",org.jose
+ 4j.jwt;uses:="org.jose4j.jwt.consumer,org.jose4j.json,org.jose4j.lang,o
+ rg.jose4j.base64url";version="0.9.6",org.jose4j.jwt.consumer;uses:="org
+ .jose4j.jwt,org.jose4j.jws,org.jose4j.jwx,org.jose4j.jwe,org.jose4j.key
+ s,org.jose4j.lang,org.jose4j.keys.resolvers,org.jose4j.jwa,org.jose4j.j
+ ca";version="0.9.6",org.jose4j.jwa;uses:="org.jose4j.keys,org.slf4j,org
+ .jose4j.jws,org.jose4j.lang,org.jose4j.zip,org.jose4j.jwx,org.jose4j.jw
+ e,javax.crypto";version="0.9.6",org.jose4j.base64url;uses:="org.jose4j.
+ lang";version="0.9.6",org.jose4j.jwk;uses:="org.slf4j,org.jose4j.lang,o
+ rg.jose4j.jwe,org.jose4j.keys,org.jose4j.http,org.jose4j.json,org.jose4
+ j.base64url,javax.crypto.spec,org.jose4j.jws,org.jose4j.jwa,org.jose4j.
+ jwx";version="0.9.6",org.jose4j.jwe;uses:="org.jose4j.mac,javax.crypto,
+ org.jose4j.keys,javax.crypto.spec,org.jose4j.lang,org.jose4j.jwa,org.jo
+ se4j.jwx,org.jose4j.base64url,org.jose4j.jca,org.slf4j,org.jose4j.jwk,o
+ rg.jose4j.jwe.kdf,org.jose4j.zip";version="0.9.6",org.jose4j.jwe.kdf;us
+ es:="org.slf4j,org.jose4j.lang,org.jose4j.base64url,javax.crypto,org.jo
+ se4j.keys,org.jose4j.mac";version="0.9.6",org.jose4j.lang;uses:="org.jo
+ se4j.base64url,org.jose4j.jwt";version="0.9.6",org.jose4j.mac;uses:="ja
+ vax.crypto,org.jose4j.lang";version="0.9.6",org.jose4j.zip;uses:="org.j
+ ose4j.jwa,org.jose4j.lang,org.jose4j.keys,org.slf4j";version="0.9.6",or
+ g.jose4j.json;uses:="org.jose4j.lang";version="0.9.6",org.jose4j.jwx;us
+ es:="org.jose4j.lang,org.jose4j.json,org.jose4j.jwk,org.jose4j.base64ur
+ l,org.jose4j.jws,org.jose4j.keys,org.jose4j.jwe,org.jose4j.jwa,org.jose
+ 4j.jca";version="0.9.6",org.jose4j.jca;version="0.9.6",org.jose4j.http;
+ uses:="org.slf4j,javax.net.ssl,org.jose4j.lang";version="0.9.6",org.jos
+ e4j.keys;uses:="javax.crypto.spec,org.jose4j.lang,org.jose4j.base64url,
+ org.jose4j.jwk";version="0.9.6",org.jose4j.keys.resolvers;uses:="org.jo
+ se4j.jwx,org.jose4j.lang,org.jose4j.jwe,org.jose4j.jws,org.jose4j.jwk,o
+ rg.slf4j,org.jose4j.keys";version="0.9.6"
+Import-Package: javax.crypto,javax.crypto.spec,javax.net.ssl,org.jose4j.
+ lang,org.slf4j;version="[1.7,2)"
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-Description: The jose.4.j library is a robust and easy to use ope
+ n source implementation of JSON Web Token (JWT) and the JOSE specificat
+ ion suite (JWS, JWE, and JWK).     It is written in Java and relies sol
+ ely on the JCA APIs for cryptography.     Please see https://bitbucket.
+ org/b_c/jose4j/wiki/Home for more info, examples, etc..
+Bundle-SymbolicName: org.bitbucket.b_c.jose4j
+Bundle-Version: 0.9.6
+Bundle-Name: jose4j
+

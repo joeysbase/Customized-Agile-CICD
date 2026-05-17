@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1655327880042
+Build-Jdk: 11.0.15
+Built-By: fabian
+Bundle-Description: The Prometheus Java Suite: Client Metrics, Expositio
+ n, and Examples
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Prometheus Java Span Context Supplier - OpenTelemetry Agent
+Bundle-SymbolicName: io.prometheus.simpleclient_tracer_otel_agent
+Bundle-Version: 0.16.0
+Created-By: Apache Maven Bundle Plugin
+Export-Package: io.prometheus.client.exemplars.tracer.otel_agent;uses:="
+ io.prometheus.client.exemplars.tracer.common";version="0.16.0"
+Import-Package: io.opentelemetry.api.trace;resolution:=optional,io.prome
+ theus.client.exemplars.tracer.common;version="[0.16,1)"
+Tool: Bnd-2.1.0.20130426-122213

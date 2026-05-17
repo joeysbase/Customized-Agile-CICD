@@ -3,6 +3,9 @@ package fteam.engine;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Worker that retrieves and returns persisted pipeline execution reports.
+ */
 public class ReportWorker extends Worker {
 
   private final String pipelineName;
@@ -13,6 +16,14 @@ public class ReportWorker extends Worker {
   private List<String> messages;
   private AtomicBoolean status;
 
+  /**
+   * Creates a report worker for the selected pipeline/run/stage/job path.
+   *
+   * @param pipelineName pipeline name
+   * @param runNo optional run number
+   * @param stageName optional stage name
+   * @param jobName optional job name
+   */
   public ReportWorker(String pipelineName, String runNo, String stageName, String jobName) {
     this.pipelineName = pipelineName;
     this.runNo = runNo;
@@ -20,16 +31,29 @@ public class ReportWorker extends Worker {
     this.jobName = jobName;
   }
 
+  /**
+   * Replaces the worker message sink used to collect output.
+   *
+   * @param messages shared message list
+   */
   @Override
   public void setMessages(List<String> messages) {
     this.messages = messages;
   }
 
+  /**
+   * Replaces the worker completion flag.
+   *
+   * @param status shared completion flag
+   */
   @Override
   public void setStatus(AtomicBoolean status) {
     this.status = status;
   }
 
+  /**
+   * Resolves the requested report and appends the formatted response to the message list.
+   */
   @Override
   public void run() {
     try {
@@ -53,13 +77,19 @@ public class ReportWorker extends Worker {
         return;
       }
 
-      String reportText = ReportService.renderReport(pipelineName, emptyToNull(runNo), emptyToNull(stageName), emptyToNull(jobName));
+      String reportText =
+          ReportService.renderReport(
+              pipelineName, emptyToNull(runNo), emptyToNull(stageName), emptyToNull(jobName));
       messages.add(reportText);
 
     } catch (Exception e) {
-      if (messages != null) messages.add("Server error: " + e.getMessage());
+      if (messages != null) {
+        messages.add("Server error: " + e.getMessage());
+      }
     } finally {
-      if (status != null) status.set(true);
+      if (status != null) {
+        status.set(true);
+      }
     }
   }
 

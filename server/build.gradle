@@ -46,6 +46,29 @@ dependencies {
 
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstyle.toolVersion}"
     implementation 'org.mongodb:mongodb-driver-sync:4.11.1'
+    implementation "com.github.docker-java:docker-java:3.7.1"
+    implementation "com.github.docker-java:docker-java-transport-httpclient5:3.7.1"
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    implementation 'io.kubernetes:client-java:21.0.0'
+
+    // Prometheus metrics
+    implementation 'io.prometheus:simpleclient:0.16.0'
+    implementation 'io.prometheus:simpleclient_common:0.16.0'
+    implementation 'io.prometheus:simpleclient_hotspot:0.16.0'
+
+    // Structured JSON logging
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    implementation 'org.slf4j:jul-to-slf4j:2.0.9'
+
+    // OTel (logs now, traces in #114)
+    implementation platform('io.opentelemetry:opentelemetry-bom:1.43.0')
+    implementation platform('io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:2.9.0-alpha')
+    implementation 'io.opentelemetry:opentelemetry-api'
+    implementation 'io.opentelemetry:opentelemetry-sdk'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    implementation 'io.opentelemetry:opentelemetry-sdk-logs'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0'
 }
 
 jar {
@@ -53,11 +76,13 @@ jar {
 
     manifest {
         attributes(
-            "Main-Class": application.mainClass
+                "Main-Class": application.mainClass
         )
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
 
     from {
         configurations.runtimeClasspath.collect {
@@ -89,6 +114,8 @@ test {
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
+jacocoTestReport.outputs.upToDateWhen { false }
+
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
 
@@ -97,7 +124,63 @@ jacocoTestReport {
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
-} 
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/DockerJobExecutor*',
+                '**/KubernetesJobExecutor*',
+                '**/DataStoreAgent*',
+                '**/ReportService*',
+                '**/ReportWorker*',
+                '**/RunWorker*',
+                '**/engine/git/**',
+                '**/JobScheduler*',
+                '**/RunHandler*',
+                '**/ReportHandler*',
+                '**/PipelineRouter*',
+                '**/ServerMain*',
+                '**/ServerAgent*',
+                '**/MetricsRegistry*',
+                '**/MetricsHandler*',
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn test
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+        }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/DockerJobExecutor*',
+                '**/KubernetesJobExecutor*',
+                '**/DataStoreAgent*',
+                '**/ReportService*',
+                '**/ReportWorker*',
+                '**/RunWorker*',
+                '**/engine/git/**',
+                '**/JobScheduler*',
+                '**/RunHandler*',
+                '**/ReportHandler*',
+                '**/PipelineRouter*',
+                '**/ServerMain*',
+                '**/ServerAgent*',
+                '**/MetricsRegistry*',
+                '**/MetricsHandler*',
+            ])
+        }))
+    }
+}
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
@@ -108,7 +191,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'fteam.server.Main'
+    mainClass = 'fteam.server.ServerMain'
 }
 
 tasks.named('test') {

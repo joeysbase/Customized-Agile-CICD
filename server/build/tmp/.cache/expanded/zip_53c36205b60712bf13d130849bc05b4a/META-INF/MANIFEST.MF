@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Implementation-Title: Apache HttpClient
+Automatic-Module-Name: org.apache.httpcomponents.client5.httpclient5
+Implementation-Version: 5.5.1
+Specification-Vendor: The Apache Software Foundation
+Specification-Title: Apache HttpClient
+Implementation-Vendor-Id: org.apache
+Build-Jdk-Spec: 1.8
+Created-By: Maven JAR Plugin 3.2.2
+Specification-Version: 5.5
+Implementation-URL: https://hc.apache.org/httpcomponents-client-5.5.x/
+ 5.5.1/httpclient5/
+Implementation-Vendor: The Apache Software Foundation
+

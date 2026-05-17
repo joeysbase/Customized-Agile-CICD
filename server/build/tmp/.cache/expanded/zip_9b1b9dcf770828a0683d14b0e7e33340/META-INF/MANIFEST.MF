@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: io.opentelemetry.sdk.common
+Built-By: runner
+Built-JDK: 17.0.12
+Implementation-Title: common
+Implementation-Version: 1.43.0
+Multi-Release: true
+

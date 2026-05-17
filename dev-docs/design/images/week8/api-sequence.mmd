@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor User
+    participant CLI as VerifySubcommand
+    participant RA as RequestAgent
+    participant Server as VerifyHandler
+    participant Engine as PipelineConfig
+
+    User->>CLI: cicd verify .pipelines/success.yaml
+    CLI->>CLI: Files.readString(path)
+    CLI->>RA: postVerifyWorker(yamlContent)
+    RA->>Server: POST /api/pipelines/verify<br/>Content-Type: text/plain<br/>Body: yaml content
+    Server->>Engine: PipelineConfig.fromYamlString(body)
+    Engine-->>Server: PipelineConfig (valid/messages)
+    Server-->>RA: 200 {"valid": true, "messages": [...]}
+    RA-->>CLI: response stored in MESSAGES
+    CLI-->>User: Verification results

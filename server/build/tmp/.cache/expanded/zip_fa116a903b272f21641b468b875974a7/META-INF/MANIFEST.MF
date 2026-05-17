@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.mongodb.bson
+Bnd-LastModified: 1699465060447
+Build-Version: 4.11.1
+Bundle-ManifestVersion: 2
+Bundle-Name: bson
+Bundle-SymbolicName: org.mongodb.bson
+Bundle-Version: 4.11.1
+Created-By: 17 (Oracle Corporation)
+Export-Package: org.bson;uses:="org.bson.codecs,org.bson.codecs.config
+ uration,org.bson.conversions,org.bson.io,org.bson.json,org.bson.types
+ ";version="4.11.1",org.bson.assertions;version="4.11.1",org.bson.code
+ cs;uses:="org.bson,org.bson.codecs.configuration,org.bson.conversions
+ ,org.bson.json,org.bson.types";version="4.11.1",org.bson.codecs.confi
+ guration;uses:="org.bson,org.bson.codecs";version="4.11.1",org.bson.c
+ odecs.jsr310;uses:="org.bson,org.bson.codecs,org.bson.codecs.configur
+ ation";version="4.11.1",org.bson.codecs.pojo;uses:="org.bson,org.bson
+ .codecs,org.bson.codecs.configuration,org.bson.types";version="4.11.1
+ ",org.bson.codecs.pojo.annotations;uses:="org.bson";version="4.11.1",
+ org.bson.conversions;uses:="org.bson,org.bson.codecs.configuration";v
+ ersion="4.11.1",org.bson.diagnostics;version="4.11.1",org.bson.intern
+ al;uses:="org.bson,org.bson.codecs,org.bson.codecs.configuration";ver
+ sion="4.11.1",org.bson.io;uses:="org.bson,org.bson.types";version="4.
+ 11.1",org.bson.json;uses:="org.bson,org.bson.codecs.configuration,org
+ .bson.conversions,org.bson.types";version="4.11.1",org.bson.types;use
+ s:="org.bson";version="4.11.1"
+Import-Package: org.slf4j;resolution:=optional;version="[1.7,2)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-5.1.2.202007211702
+

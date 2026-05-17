@@ -3,35 +3,77 @@ package fteam.engine;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Worker implements Runnable{
-    private List<String> messages;
-    private AtomicBoolean status;
+/**
+ * Base class for asynchronous workers managed by {@link WorkerManager}.
+ */
+public abstract class Worker implements Runnable {
+  private List<String> messages;
+  private AtomicBoolean status;
 
-    public void addMessage(String msg){
-        this.messages.add(msg);
-    }
+  /**
+   * Creates a worker with externally supplied status and message sinks.
+   */
+  public Worker() {
+  }
 
-    public List<String> getMessages(){
-        return messages;
-    }
+  /**
+   * Appends one message to the shared output list.
+   *
+   * @param msg message to append
+   */
+  public void addMessage(String msg) {
+    this.messages.add(msg);
+  }
 
-    public void setStatus(AtomicBoolean status){
-        this.status=status;
-    }
+  /**
+   * Returns the shared message list for this worker.
+   *
+   * @return message list
+   */
+  public List<String> getMessages() {
+    return messages;
+  }
 
-    public void setMessages(List<String> messages){
-        this.messages=messages;
-    }
+  /**
+   * Sets the shared completion flag.
+   *
+   * @param status completion flag
+   */
+  public void setStatus(AtomicBoolean status) {
+    this.status = status;
+  }
 
-    public AtomicBoolean getStatus(){
-        return status;
-    }
+  /**
+   * Sets the shared message sink.
+   *
+   * @param messages message list
+   */
+  public void setMessages(List<String> messages) {
+    this.messages = messages;
+  }
 
-    public void setWorkDone(){
-        this.status.set(true);
-    }
+  /**
+   * Returns the shared completion flag.
+   *
+   * @return completion flag
+   */
+  public AtomicBoolean getStatus() {
+    return status;
+  }
 
-    public boolean isWorkDone(){
-        return status.get();
-    }
+  /**
+   * Marks this worker as completed.
+   */
+  public void setWorkDone() {
+    this.status.set(true);
+  }
+
+  /**
+   * Indicates whether this worker has finished.
+   *
+   * @return {@code true} when the worker is done
+   */
+  public boolean isWorkDone() {
+    return status.get();
+  }
 }

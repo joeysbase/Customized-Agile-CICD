@@ -1,37 +1,48 @@
 package fteam.engine;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.Mark;
-import org.yaml.snakeyaml.nodes.*;
+import org.yaml.snakeyaml.nodes.MappingNode;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.NodeTuple;
+import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.SequenceNode;
 
+/** Parsed and validated representation of a pipeline configuration file. */
 public class PipelineConfig {
+  private static final String PIPELINE_KEY = "pipeline";
+  private static final String STAGES_KEY = "stages";
   private Set<String> stages;
   private String name;
   private String description;
   private List<Job> jobs;
-  private List<Job> excutionSequence=new ArrayList<>();
-  private List<String> messages=new ArrayList<>();
+  private List<Job> excutionSequence = new ArrayList<>();
+  private List<String> messages = new ArrayList<>();
   private boolean isValid;
   private File currentFile;
   private Map<String, Mark> needsMarkByJob = new HashMap<>();
   private List<String> stagesInOrder = new ArrayList<>();
   private Map<String, Mark> stageMarkByJob = new HashMap<>();
   private Map<String, Map<String, Mark>> needsItemMarkByJob = new HashMap<>();
+
   private enum State {
-    VISITING, VISITED
+    VISITING,
+    VISITED
   }
 
-  private PipelineConfig(Set<String> stages, List<String> stagesInOrder, String name, String description, List<Job> jobs){
+  private PipelineConfig(
+      Set<String> stages,
+      List<String> stagesInOrder,
+      String name,
+      String description,
+      List<Job> jobs) {
     this.stages = stages;
     this.stagesInOrder = stagesInOrder;
     this.name = name;
@@ -39,7 +50,7 @@ public class PipelineConfig {
     this.jobs = jobs;
   }
 
-  private void verifyAndBuild(){
+  private void verifyAndBuild() {
     isValid = true;
     verifyStages();
     verifyJobs();
@@ -61,20 +72,26 @@ public class PipelineConfig {
 
       if (!stages.contains(job.getStage())) {
         Mark m = stageMarkByJob.get(job.getName());
-        messages.add(line(m) + ":" + col(m) +
-            ": job " + job.getName() +
-            " uses undefined stage " + job.getStage());
+        messages.add(
+            line(m)
+                + ":"
+                + col(m)
+                + ": job "
+                + job.getName()
+                + " uses undefined stage "
+                + job.getStage());
       }
     }
-
   }
+
   private void verifyEmptyStages() {
     Map<String, Integer> counts = new HashMap<>();
-    for (String s : stages) counts.put(s, 0);
+    for (String s : stages) {
+      counts.put(s, 0);
+    }
 
     for (Job j : jobs) {
-      counts.put(j.getStage(),
-          counts.getOrDefault(j.getStage(), 0) + 1);
+      counts.put(j.getStage(), counts.getOrDefault(j.getStage(), 0) + 1);
     }
 
     for (Map.Entry<String, Integer> e : counts.entrySet()) {
@@ -89,6 +106,7 @@ public class PipelineConfig {
       messages.add("no stages defined");
     }
   }
+
   private static MappingNode asMapping(Node n) {
     return (n instanceof MappingNode) ? (MappingNode) n : null;
   }
@@ -117,36 +135,55 @@ public class PipelineConfig {
     return null;
   }
 
-  private static int line(Mark m) { return (m == null) ? 1 : m.getLine() + 1; }
-  private static int col(Mark m)  { return (m == null) ? 1 : m.getColumn() + 1; }
+  private static int line(Mark m) {
+    return (m == null) ? 1 : m.getLine() + 1;
+  }
+
+  private static int col(Mark m) {
+    return (m == null) ? 1 : m.getColumn() + 1;
+  }
 
   private void buildJobGraph() {
     excutionSequence.clear();
     Map<String, Map<String, Job>> stageJobMap = new HashMap<>();
     for (Job job : jobs) {
-      stageJobMap.computeIfAbsent(job.getStage(), k -> new HashMap<>())
-          .put(job.getName(), job);
+      stageJobMap.computeIfAbsent(job.getStage(), k -> new HashMap<>()).put(job.getName(), job);
     }
 
     for (String stage : stagesInOrder) {
       Map<String, Job> jobMap = stageJobMap.getOrDefault(stage, Map.of());
 
-      if (jobMap.isEmpty()) continue;
+      if (jobMap.isEmpty()) {
+        continue;
+      }
 
       for (Job job : jobMap.values()) {
         for (String dep : job.getNeeds()) {
           if (!jobMap.containsKey(dep)) {
             Mark m = null;
             Map<String, Mark> depMarks = needsItemMarkByJob.get(job.getName());
-            if (depMarks != null) m = depMarks.get(dep);
-            if (m == null) m = needsMarkByJob.get(job.getName());
-            messages.add(line(m) + ":" + col(m)
-                + ": job " + job.getName()
-                + " needs unknown job `" + dep + "` in stage " + stage);
+            if (depMarks != null) {
+              m = depMarks.get(dep);
+            }
+            if (m == null) {
+              m = needsMarkByJob.get(job.getName());
+            }
+            messages.add(
+                line(m)
+                    + ":"
+                    + col(m)
+                    + ": job "
+                    + job.getName()
+                    + " needs unknown job `"
+                    + dep
+                    + "` in stage "
+                    + stage);
           }
         }
       }
-      if (!messages.isEmpty()) return;
+      if (!messages.isEmpty()) {
+        return;
+      }
 
       // topo sort within stage
       Map<String, State> state = new HashMap<>();
@@ -158,7 +195,9 @@ public class PipelineConfig {
       for (String jobName : names) {
         if (!state.containsKey(jobName)) {
           topoDfs(jobName, jobMap, state, new ArrayList<>(), stageOrder);
-          if (!messages.isEmpty()) return;
+          if (!messages.isEmpty()) {
+            return;
+          }
         }
       }
 
@@ -166,14 +205,12 @@ public class PipelineConfig {
     }
   }
 
-
   private void topoDfs(
       String jobName,
       Map<String, Job> jobMap,
       Map<String, State> state,
       List<String> path,
-      List<Job> out
-  ) {
+      List<Job> out) {
     State st = state.get(jobName);
     if (st == State.VISITING) {
       String cycle = String.join(" -> ", path) + " -> " + jobName;
@@ -181,28 +218,31 @@ public class PipelineConfig {
       messages.add(line(m) + ":" + col(m) + ": cycle detected in `needs`: " + cycle);
       return;
     }
-    if (st == State.VISITED) return;
+    if (st == State.VISITED) {
+      return;
+    }
 
     state.put(jobName, State.VISITING);
     path.add(jobName);
 
     Job cur = jobMap.get(jobName);
     if (cur == null) {
-      messages.add(currentFile.getPath() + ":1:1: internal: unknown job referenced: `" + jobName + "`");
+      messages.add(
+          currentFile.getPath() + ":1:1: internal: unknown job referenced: `" + jobName + "`");
       return;
     }
 
     for (String dep : cur.getNeeds()) {
       topoDfs(dep, jobMap, state, path, out);
-      if (!messages.isEmpty()) return;
+      if (!messages.isEmpty()) {
+        return;
+      }
     }
 
     state.put(jobName, State.VISITED);
     path.remove(path.size() - 1);
     out.add(cur);
   }
-
-
 
   private static PipelineConfig badAt(File file, int line, int col, String msg) {
     PipelineConfig pc =
@@ -216,22 +256,45 @@ public class PipelineConfig {
     return badAt(file, 1, 1, msg);
   }
 
-
-  public boolean isvalidConfig(){
+  /**
+   * Indicates whether the parsed configuration is valid.
+   *
+   * @return {@code true} when validation succeeded
+   */
+  public boolean isvalidConfig() {
     return isValid;
   }
 
-  public List<String> getVerificationMsg(){
+  /**
+   * Returns validation messages collected while parsing the configuration.
+   *
+   * @return validation or error messages
+   */
+  public List<String> getVerificationMsg() {
     return messages;
   }
+
+  /**
+   * Parses a configuration from either raw YAML text or a filesystem path.
+   *
+   * @param pathOrYaml YAML content or a path to a YAML file
+   * @return parsed configuration
+   */
   public static PipelineConfig fromFile(String pathOrYaml) {
-    if (pathOrYaml.contains("\n") ||
-        pathOrYaml.contains("pipeline:") ||
-        pathOrYaml.contains("stages:")) {
+    if (pathOrYaml.contains("\n")
+        || pathOrYaml.contains("pipeline:")
+        || pathOrYaml.contains("stages:")) {
       return fromYamlString(pathOrYaml);
     }
     return fromFileContent(new File(pathOrYaml));
   }
+
+  /**
+   * Parses a configuration from inline YAML text.
+   *
+   * @param yamlText YAML content
+   * @return parsed configuration
+   */
   public static PipelineConfig fromYamlString(String yamlText) {
     return fromText(yamlText, new File("<inline-yaml>"));
   }
@@ -254,44 +317,55 @@ public class PipelineConfig {
 
     final MappingNode rootMapNode = asMapping(rootNode);
     if (rootMapNode == null) {
-      return badAt(sourceFileForMsg, line(rootNode.getStartMark()), col(rootNode.getStartMark()),
+      return badAt(
+          sourceFileForMsg,
+          line(rootNode.getStartMark()),
+          col(rootNode.getStartMark()),
           "top-level YAML must be a mapping (key-value pairs)");
     }
 
     final Map<String, Object> root = asMap(loaded);
     if (root == null) {
-      return badAt(sourceFileForMsg, line(rootNode.getStartMark()), col(rootNode.getStartMark()),
+      return badAt(
+          sourceFileForMsg,
+          line(rootNode.getStartMark()),
+          col(rootNode.getStartMark()),
           "top-level YAML must be a mapping (key-value pairs)");
     }
 
     // ---------- pipeline (node) ----------
-    Node pipelineNode = findValueNode(rootMapNode, "pipeline");
+    Node pipelineNode = findValueNode(rootMapNode, PIPELINE_KEY);
     if (pipelineNode == null) {
       Mark m = rootNode.getStartMark();
-      return badAt(sourceFileForMsg, line(m), col(m), "missing required `pipeline` section");
+      return badAt(
+          sourceFileForMsg, line(m), col(m), "missing required `" + PIPELINE_KEY + "` section");
     }
 
     MappingNode pipelineMapNode = asMapping(pipelineNode);
     if (pipelineMapNode == null) {
-      Mark km = findKeyMark(rootMapNode, "pipeline");
-      return badAt(sourceFileForMsg, line(km), col(km), "`pipeline` must be a mapping");
+      Mark km = findKeyMark(rootMapNode, PIPELINE_KEY);
+      return badAt(
+          sourceFileForMsg, line(km), col(km), "`" + PIPELINE_KEY + "` must be a mapping");
     }
 
     // ---------- stages (node) ----------
-    Node stagesNode = findValueNode(rootMapNode, "stages");
+    Node stagesNode = findValueNode(rootMapNode, STAGES_KEY);
     if (stagesNode == null) {
-      return badAt(sourceFileForMsg, 1, 1, "missing required `stages` (expected list)");
+      return badAt(
+          sourceFileForMsg, 1, 1, "missing required `" + STAGES_KEY + "` (expected list)");
     }
     if (asSequence(stagesNode) == null) {
-      Mark kmStages = findKeyMark(rootMapNode, "stages");
-      return badAt(sourceFileForMsg, line(kmStages), col(kmStages), "`stages` must be a list");
+      Mark kmStages = findKeyMark(rootMapNode, STAGES_KEY);
+      return badAt(
+          sourceFileForMsg, line(kmStages), col(kmStages), "`" + STAGES_KEY + "` must be a list");
     }
 
     // ---------- pipeline values ----------
-    Map<String, Object> pipeline = asMap(root.get("pipeline"));
+    Map<String, Object> pipeline = asMap(root.get(PIPELINE_KEY));
     if (pipeline == null) {
-      Mark km = findKeyMark(rootMapNode, "pipeline");
-      return badAt(sourceFileForMsg, line(km), col(km), "`pipeline` must be a mapping");
+      Mark km = findKeyMark(rootMapNode, PIPELINE_KEY);
+      return badAt(
+          sourceFileForMsg, line(km), col(km), "`" + PIPELINE_KEY + "` must be a mapping");
     }
 
     Mark kmName = findKeyMark(pipelineMapNode, "name");
@@ -301,13 +375,16 @@ public class PipelineConfig {
       return badAt(sourceFileForMsg, line(kmName), col(kmName), "missing required `pipeline.name`");
     }
     if (!(nameObj instanceof String)) {
-      return badAt(sourceFileForMsg, line(kmName), col(kmName),
+      return badAt(
+          sourceFileForMsg,
+          line(kmName),
+          col(kmName),
           "wrong type of value given for `pipeline.name`. Expected String, given " + nameObj);
     }
     String name = (String) nameObj;
     if (name.isBlank()) {
-      return badAt(sourceFileForMsg, line(kmName), col(kmName),
-          "`pipeline.name` must be non-empty String");
+      return badAt(
+          sourceFileForMsg, line(kmName), col(kmName), "`pipeline.name` must be non-empty String");
     }
 
     // pipeline.description
@@ -316,33 +393,44 @@ public class PipelineConfig {
     if (descNode != null) {
       Mark kmDesc = findKeyMark(pipelineMapNode, "description");
       if (!(descNode instanceof ScalarNode dsn)) {
-        return badAt(sourceFileForMsg, line(kmDesc), col(kmDesc),
-            "wrong type of value given for `pipeline.description`. Expected String, given " + descNode);
+        return badAt(
+            sourceFileForMsg,
+            line(kmDesc),
+            col(kmDesc),
+            "wrong type of value given for `pipeline.description`. Expected String, given "
+                + descNode);
       }
       description = dsn.getValue();
     }
 
     // ---------- stages values ----------
-    Object stagesObj = root.get("stages");
+    Object stagesObj = root.get(STAGES_KEY);
     List<Object> stagesRaw = asList(stagesObj);
     if (stagesRaw == null || stagesRaw.isEmpty()) {
-      Mark kmStages = findKeyMark(rootMapNode, "stages");
-      return badAt(sourceFileForMsg, line(kmStages), col(kmStages),
-          "`stages` must be a non-empty list of Strings");
+      Mark kmStages = findKeyMark(rootMapNode, STAGES_KEY);
+      return badAt(
+          sourceFileForMsg,
+          line(kmStages),
+          col(kmStages),
+          "`" + STAGES_KEY + "` must be a non-empty list of Strings");
     }
 
     List<String> stagesList = new ArrayList<>();
     Set<String> stagesSet = new HashSet<>();
     for (Object s : stagesRaw) {
       if (!(s instanceof String) || ((String) s).isBlank()) {
-        Mark kmStages = findKeyMark(rootMapNode, "stages");
-        return badAt(sourceFileForMsg, line(kmStages), col(kmStages),
-            "wrong type/value in `stages`. Expected non-empty String, given " + s);
+        Mark kmStages = findKeyMark(rootMapNode, STAGES_KEY);
+        return badAt(
+            sourceFileForMsg,
+            line(kmStages),
+            col(kmStages),
+            "wrong type/value in `" + STAGES_KEY + "`. Expected non-empty String, given " + s);
       }
       String ss = (String) s;
       if (!stagesSet.add(ss)) {
-        Mark kmStages = findKeyMark(rootMapNode, "stages");
-        return badAt(sourceFileForMsg, line(kmStages), col(kmStages), "duplicate stage name: " + ss);
+        Mark kmStages = findKeyMark(rootMapNode, STAGES_KEY);
+        return badAt(
+            sourceFileForMsg, line(kmStages), col(kmStages), "duplicate stage name: " + ss);
       }
       stagesList.add(ss);
     }
@@ -351,11 +439,16 @@ public class PipelineConfig {
     List<Job> jobs = new ArrayList<>();
     for (Map.Entry<String, Object> entry : root.entrySet()) {
       String key = entry.getKey();
-      if (key.equals("pipeline") || key.equals("stages")) continue;
+      if (key.equals(PIPELINE_KEY) || key.equals(STAGES_KEY)) {
+        continue;
+      }
 
       if (!(entry.getValue() instanceof Map)) {
         Mark kmJob = findKeyMark(rootMapNode, key);
-        return badAt(sourceFileForMsg, line(kmJob), col(kmJob),
+        return badAt(
+            sourceFileForMsg,
+            line(kmJob),
+            col(kmJob),
             "job `" + key + "` must be a mapping with keys: stage/image/script/needs");
       }
 
@@ -366,8 +459,8 @@ public class PipelineConfig {
         jobs.add(Job.fromYaml(key, jobMap));
       } catch (IllegalArgumentException ex) {
         Mark kmJob = findKeyMark(rootMapNode, key);
-        return badAt(sourceFileForMsg, line(kmJob), col(kmJob),
-            "job `" + key + "`: " + ex.getMessage());
+        return badAt(
+            sourceFileForMsg, line(kmJob), col(kmJob), "job `" + key + "`: " + ex.getMessage());
       }
     }
 
@@ -377,13 +470,19 @@ public class PipelineConfig {
 
     for (NodeTuple top : rootMapNode.getValue()) {
       Node k = top.getKeyNode();
-      if (!(k instanceof ScalarNode ks)) continue;
+      if (!(k instanceof ScalarNode ks)) {
+        continue;
+      }
 
       String topKey = ks.getValue();
-      if (topKey.equals("pipeline") || topKey.equals("stages")) continue;
+      if (topKey.equals(PIPELINE_KEY) || topKey.equals(STAGES_KEY)) {
+        continue;
+      }
 
       MappingNode jobNode = asMapping(top.getValueNode());
-      if (jobNode == null) continue;
+      if (jobNode == null) {
+        continue;
+      }
 
       Node needsValueNode = findValueNode(jobNode, "needs");
       if (needsValueNode instanceof SequenceNode seq) {
@@ -407,13 +506,18 @@ public class PipelineConfig {
       if (stageMark != null) {
         config.stageMarkByJob.put(topKey, stageMark);
       }
-
     }
 
     config.verifyAndBuild();
     return config;
   }
 
+  /**
+   * Parses a configuration from a file on disk.
+   *
+   * @param file YAML file to parse
+   * @return parsed configuration
+   */
   public static PipelineConfig fromFileContent(File file) {
     final String text;
     try {
@@ -424,34 +528,67 @@ public class PipelineConfig {
     return fromText(text, file);
   }
 
-
-
+  @SuppressWarnings("unchecked")
+  private static Map<String, Object> asMap(Object o) {
+    return (o instanceof Map) ? (Map<String, Object>) o : null;
+  }
 
   @SuppressWarnings("unchecked")
-  private static Map<String, Object> asMap(Object o) { return (o instanceof Map) ? (Map<String, Object>) o : null; }
+  private static List<Object> asList(Object o) {
+    return (o instanceof List) ? (List<Object>) o : null;
+  }
 
-  @SuppressWarnings("unchecked")
-  private static List<Object> asList(Object o) { return (o instanceof List) ? (List<Object>) o : null; }
-
+  /**
+   * Returns the declared pipeline stages.
+   *
+   * @return stage names
+   */
   public Set<String> getStages() {
     return stages;
   }
 
+  /**
+   * Returns the pipeline name.
+   *
+   * @return pipeline name
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the optional pipeline description.
+   *
+   * @return pipeline description or {@code null}
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Returns all parsed jobs.
+   *
+   * @return parsed job list
+   */
   public List<Job> getJobs() {
     return jobs;
   }
 
+  /**
+   * Returns the computed execution sequence after validation.
+   *
+   * @return execution sequence
+   */
   public List<Job> getExcutionSequence() {
     return excutionSequence;
   }
-  public List<String> getStagesInOrder() { return stagesInOrder; }
 
+  /**
+   * Returns the stages in their declared execution order.
+   *
+   * @return ordered stage list
+   */
+  public List<String> getStagesInOrder() {
+    return stagesInOrder;
+  }
 }
